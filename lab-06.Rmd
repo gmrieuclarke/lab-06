@@ -27,9 +27,27 @@ diamonds <- diamonds %>% rename(
 ## Exercise 1
 
 ```{r}
-# Do some preliminary investigations & cleaning
 
+diamonds %>%
+  filter(
+    length_mm != 0,
+    width_mm != 0,
+    depth_mm != 0
+  ) %>%
+  ggplot(
+    mapping = aes(
+      x=depth_pct,
+      y=length_mm
+      )) +
+  geom_point(aes(alpha = 0.5))
 
+diamonds %>%
+  filter(
+    length_mm != 0,
+    width_mm != 0,
+    depth_mm != 0
+  ) %>%
+  summary()
 
 
 ```
@@ -40,16 +58,17 @@ diamonds <- diamonds %>% rename(
 ```{r}
 
 diamonds <- diamonds %>%
+  filter(width_mm != 0) %>%
   mutate(table_mm = table_pct * width_mm / 100)
 
-# Overall table_mm arithmetic mean?
+diamonds$table_mm %>%
+  na.omit() %>%
+  mean()
 
 
-
-
-
-
-# table_mm arithmetic mean within each clarity category
+diamonds %>%
+  group_by(clarity) %>%
+ summarise(mean_tl = mean(table_mm, na.rm = TRUE))
 
 
 
@@ -58,7 +77,7 @@ diamonds <- diamonds %>%
 
 ```
 
-_Add your comment here_
+_The average table length decreases as clarity increases._
 
 ## Exercise 3
 
@@ -68,8 +87,14 @@ _Do derivation on paper, unless you know how to write LaTeX code_
 ## Exercise 4
 
 ```{r}
-# Write gmean() command
 
+gmean <- function(x) {
+  n = length(x)
+  g = exp((1/n)*sum(log(x)))
+  return(g)
+}
+
+gmean(c(1, 2, 3))
 
 
 ```
